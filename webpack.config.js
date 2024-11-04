@@ -4,7 +4,6 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = {
   // 定义入口文件
   entry: {
-    popup: './src/popup/popup.js',          // 弹窗的入口文件
     contentScript: './src/content/contentScript.js',  // 内容脚本的入口文件
     background: './src/background/background.js',  // 后台服务脚本入口文件
   },

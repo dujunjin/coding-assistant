@@ -1,13 +1,19 @@
-/* 侧边栏样式 */
+
+/* 侧边栏容器样式 */
 .sidebar-container {
-  font-family: Arial, sans-serif;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 25%;
+  height: 100%;
+  z-index: 10000;
   display: flex;
   flex-direction: column;
   background-color: #f5f7fa;
   box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s, color 0.3s;
   border-radius: 10px;
   padding: 10px;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 /* 上边栏样式 */
@@ -158,7 +164,7 @@
   white-space: pre-wrap;
   word-wrap: break-word;
   display: inline-block;
-  padding: 15px 15px;
+  padding: 20px 15px 50px 15px;
   border-radius: 10px;
   position: relative;
   overflow: visible;  /* 确保内容不被裁剪 */
@@ -206,6 +212,32 @@
   font-size: 0.75em;
   color: #888;
   position: absolute;
-  bottom: 0.5px;  /* 固定在气泡的底部 */
+  /* margin-top: -50px; */
+  bottom: 0.5px;  /*固定在气泡的底部*/
   right: 5px;  /* 靠右对齐 */
 }
+
+.button-container {
+  display: flex;
+  gap: 10px;
+  position: absolute;  /* 使用绝对定位 */
+  margin-top: -5px; /*使用负的 margin 将按钮向上拉 */
+  left: 10px;   /* 可以调整到需要的水平位置 */
+  font-size: 0.75em;
+  align-items: center; /* 垂直居中对齐图标 */
+}
+
+.copy-button, .retry-button, .favorite-button {
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: #555;
+  font-size: 0.75em;
+  padding: 0 4px; /* 减少左右间距以使图标更紧凑 */
+}
+
+.copy-button:hover, .retry-button:hover, .favorite-button:hover {
+  color: #007bff;
+}
+
+
