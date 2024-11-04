@@ -6,6 +6,7 @@ import { showIcon, removeIcon } from '../utils/iconManager';
 import { sendMessageToModel } from '../services/modelService'; // 引入封装好的模型服务函数
 import '../styles/sidebar.css';
 
+
 const App = () => {
   const [chatHistory, setChatHistory] = useState([]);
   const [selectedText, setSelectedText] = useState('');

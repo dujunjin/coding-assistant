@@ -1,5 +1,6 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const Dotenv = require('dotenv-webpack');  // 确保这里导入了 dotenv-webpack
 
 module.exports = {
   // 定义入口文件
