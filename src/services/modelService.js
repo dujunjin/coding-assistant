@@ -2,8 +2,14 @@ import fetchSSE from '../utils/fetchSSE';
 import { marked } from 'marked';
 
 const apiKey = process.env.API_KEY;
+let controller; // 定义控制器
 
 export async function sendMessageToModel(message, onUserMessage, onModelMessage) {
+  controller = new AbortController(); // 创建控制器实例
+  const { signal } = controller;
+  console.log("Creating new AbortController", controller);
+
+  
   const timestamp = new Date().toLocaleTimeString();
   const userBubbleId = Date.now();
   console.log('userBubbleId: ', userBubbleId);
@@ -35,6 +41,7 @@ export async function sendMessageToModel(message, onUserMessage, onModelMessage)
         ],
         stream: true,
       }),
+      signal,
       onMessage: (data) => {
         try {
           const parsedData = JSON.parse(data);
@@ -94,12 +101,18 @@ export async function sendMessageToModel(message, onUserMessage, onModelMessage)
     }
 
   } catch (error) {
-    // 处理网络或请求错误
-    onModelMessage({ role: 'error', content: '错误：无法连接到模型，请稍后再试。', timestamp });
-    console.error("详细错误信息：", error);
+    if (error.name === 'AbortError') {
+      onModelMessage({ role: 'system', content: '请求已中断', timestamp: '' });
+    } else {
+      onModelMessage({ role: 'error', content: '错误：无法连接到模型', timestamp });
+    }
   }
 }
 
+// 新增 cancelMessage 函数，用于中断请求
+export function cancelMessage() {
+  if (controller) controller.abort();
+}
 
 // 生成按钮 HTML 的辅助函数
 function generateButtonHTML(id) {
@@ -147,6 +160,8 @@ function generateButtonHTML(id) {
     </div>
   `;
 }
+
+
 
 // 绑定按钮事件的辅助函数
 function bindButtonEvents(id, content, onModelMessage) {

@@ -1,5 +1,6 @@
 async function fetchSSE(resource, options) {
     const { onMessage, ...fetchOptions } = options;
+    // fetchOptions.signal = signal; // 添加 signal 以支持中断
   
     // ÄÚÁª createParser º¯Êý
     function createParser(onParse) {
