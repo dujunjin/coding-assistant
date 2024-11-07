@@ -1,7 +1,7 @@
 async function fetchSSE(resource, options) {
     const { onMessage, ...fetchOptions } = options;
   
-    // ÄÚÁª createParser º¯Êı
+    // Ã„ÃšÃÂª createParser ÂºÂ¯ÃŠÃ½
     function createParser(onParse) {
       let buffer = '';
       return {

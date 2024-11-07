@@ -1,9 +1,9 @@
-// ÔÚÎÄ¼þ¶¥²¿ÉùÃ÷È«¾Ö±äÁ¿
+// åœ¨æ–‡ä»¶é¡¶éƒ¨å£°æ˜Žå…¨å±€å˜é‡
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import Sidebar from '../components/Sidebar';
 import { showIcon, removeIcon } from '../utils/iconManager';
-import { sendMessageToModel } from '../services/modelService'; // ÒýÈë·â×°ºÃµÄÄ£ÐÍ·þÎñº¯Êý
+import { sendMessageToModel } from '../services/modelService'; // å¼•å…¥å°è£…å¥½çš„æ¨¡åž‹æœåŠ¡å‡½æ•°
 import '../styles/sidebar.css';
 
 
@@ -37,7 +37,7 @@ const App = () => {
   document.addEventListener('mouseup', (e) => {
     const selectedText = window.getSelection().toString().trim();
     if (e.target.id === 'custom-selected-icon') {
-      // Èç¹ûµã»÷µÄÊÇÍ¼±ê£¬²»Çå³ýÑ¡ÖÐµÄÎÄ±¾£¬Ö±½Ó·µ»Ø
+      // å¦‚æžœç‚¹å‡»çš„æ˜¯å›¾æ ‡ï¼Œä¸æ¸…é™¤é€‰ä¸­çš„æ–‡æœ¬ï¼Œç›´æŽ¥è¿”å›ž
       return;
     }
     if (selectedText && !isSidebarVisible) {
@@ -74,7 +74,7 @@ const App = () => {
 
   chrome.runtime.onMessage.addListener((message) => {
     if (message.action === 'toggleSidebar') {
-      setSelectedText(''); // Çå¿ÕÑ¡ÖÐÎÄ±¾
+      setSelectedText(''); // æ¸…ç©ºé€‰ä¸­æ–‡æœ¬
       setSidebarVisible(!isSidebarVisible);
     }
   });
@@ -83,7 +83,7 @@ const App = () => {
     <>
       {isSidebarVisible && (
         <Sidebar
-          selectedText={selectedText}  // ½« selectedText ´«µÝ¸ø Sidebar
+          selectedText={selectedText}  // å°† selectedText ä¼ é€’ç»™ Sidebar
           onClose={() => {
             setSidebarVisible(false);
             removeIcon();

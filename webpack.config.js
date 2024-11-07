@@ -1,6 +1,7 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const Dotenv = require('dotenv-webpack');  // 确保这里导入了 dotenv-webpack
+const webpack = require('webpack');
+const dotenv = require('dotenv').config({ path: './.env' });
 
 module.exports = {
   // 定义入口文件
@@ -53,6 +54,10 @@ module.exports = {
         { from: 'public/icons', to: 'icons' },  // 复制icons文件夹到dist/icons
         { from: 'public/manifest.json', to: 'manifest.json' },  // 复制manifest.json到dist目录
       ],
+    }),
+    // 注入环境变量
+    new webpack.DefinePlugin({
+      'process.env.API_KEY': JSON.stringify(process.env.API_KEY),
     }),
   ],
   resolve: {

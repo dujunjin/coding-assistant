@@ -1,5 +1,5 @@
 
-/* ²à±ßÀ¸ÈİÆ÷ÑùÊ½ */
+/* ä¾§è¾¹æ å®¹å™¨æ ·å¼ */
 .sidebar-container {
   position: fixed;
   top: 0;
@@ -16,7 +16,7 @@
   transition: background-color 0.3s, color 0.3s;
 }
 
-/* ÉÏ±ßÀ¸ÑùÊ½ */
+/* ä¸Šè¾¹æ æ ·å¼ */
 .sidebar-title-bar {
   background-color: #007bff;
   color: white;
@@ -26,20 +26,20 @@
   align-items: center;
   border-radius: 10px 10px 0 0;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  font-size: 1.5em;  /* Ôö´ó×ÖÌå */
+  font-size: 1.5em;  /* å¢å¤§å­—ä½“ */
   position: relative;
 }
 
-/* Í¼±êÈİÆ÷ÑùÊ½ */
+/* å›¾æ ‡å®¹å™¨æ ·å¼ */
 .icon-container {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 8px; /* ËõĞ¡Í¼±êÖ®¼äµÄ¼ä¾à */
-  margin-left: auto; /* ½«Í¼±êÕûÌåÏòÓÒÒÆ¶¯ */
+  gap: 8px; /* ç¼©å°å›¾æ ‡ä¹‹é—´çš„é—´è· */
+  margin-left: auto; /* å°†å›¾æ ‡æ•´ä½“å‘å³ç§»åŠ¨ */
 }
 
-/* ¹Ì¶¨±êÊ¶µÄÑùÊ½ */
+/* å›ºå®šæ ‡è¯†çš„æ ·å¼ */
 .pin-icon, .close-icon, .more-icon {
   cursor: pointer;
   background-color: transparent;
@@ -50,17 +50,17 @@
   align-items: center;
 }
 
-/* Í¼±êhoverĞ§¹û */
+/* å›¾æ ‡hoveræ•ˆæœ */
 .pin-icon:hover, .close-icon:hover, .more-icon:hover {
   opacity: 0.8;
 }
 
-/* ±êÌâ×ó²àÍ¼±ê */
+/* æ ‡é¢˜å·¦ä¾§å›¾æ ‡ */
 .title-icon {
-  margin-right: 8px; /* µ÷ÕûÍ¼±êºÍÎÄ×ÖµÄ¼ä¾à */
+  margin-right: 8px; /* è°ƒæ•´å›¾æ ‡å’Œæ–‡å­—çš„é—´è· */
 }
 
-/* ÏÂÀ­²Ëµ¥ÑùÊ½ */
+/* ä¸‹æ‹‰èœå•æ ·å¼ */
 .dropdown-menu {
   position: absolute;
   top: 55px;
@@ -95,10 +95,10 @@
   background-color: #f1f1f1;
 }
 
-/* ÁÄÌì¼ÇÂ¼ÇøÓò */
+/* èŠå¤©è®°å½•åŒºåŸŸ */
 .chat-history {
   display: flex;
-  flex-direction: column;  /* ÈÃÆøÅİ´¹Ö±ÅÅÁĞ */
+  flex-direction: column;  /* è®©æ°”æ³¡å‚ç›´æ’åˆ— */
   flex-grow: 1;
   overflow-y: auto;
   padding: 20px;
@@ -114,7 +114,7 @@
   margin-bottom: 20px;
 }
 
-/* ÁÄÌìÆøÅİÑùÊ½ */
+/* èŠå¤©æ°”æ³¡æ ·å¼ */
 .chat-bubble {
   padding: 20px;
   margin-bottom: 15px;
@@ -140,18 +140,18 @@
 .user-bubble {
   background-color: #007bff;
   color: white;
-  align-self: flex-end;  /* ÆøÅİÔÚ¸¸ÈİÆ÷ÓÒ²à */
-  text-align: left;  /* ÎÄ±¾×ó¶ÔÆë */
-  margin-left: auto;  /* È·±£ÆøÅİ¿¿ÓÒ */
-  max-width: 100%;  /* ÆøÅİ×î´ó¿í¶ÈÎª100% */
-  min-width: 50%;  /* ¿ÉÑ¡£º×îĞ¡¿í¶È£¬±ÜÃâ¶ÌÏûÏ¢Ì«Õ­ */
-  white-space: pre-wrap;  /* ±£ÁôÓÃ»§ÊäÈëµÄ»»ĞĞ£¬±ØÒªÊ±»»ĞĞ */
-  word-wrap: break-word;  /* È·±£³¤µ¥´Ê»»ĞĞ */
-  display: inline-block;  /* Ê¹ÆøÅİ¿í¶È¸ù¾İÄÚÈİ¶¯Ì¬±ä»¯ */
-  padding: 15px 15px;  /* ÉèÖÃÆøÅİµÄÄÚ±ß¾à */
-  border-radius: 10px;  /* ÆøÅİµÄÔ²½ÇĞ§¹û */
-  position: relative;  /* ÎªÊ±¼ä´ÁÌá¹©¶¨Î»ÉÏÏÂÎÄ */
-  overflow: visible;  /* È·±£ÄÚÈİ²»±»²Ã¼ô */
+  align-self: flex-end;  /* æ°”æ³¡åœ¨çˆ¶å®¹å™¨å³ä¾§ */
+  text-align: left;  /* æ–‡æœ¬å·¦å¯¹é½ */
+  margin-left: auto;  /* ç¡®ä¿æ°”æ³¡é å³ */
+  max-width: 100%;  /* æ°”æ³¡æœ€å¤§å®½åº¦ä¸º100% */
+  min-width: 50%;  /* å¯é€‰ï¼šæœ€å°å®½åº¦ï¼Œé¿å…çŸ­æ¶ˆæ¯å¤ªçª„ */
+  white-space: pre-wrap;  /* ä¿ç•™ç”¨æˆ·è¾“å…¥çš„æ¢è¡Œï¼Œå¿…è¦æ—¶æ¢è¡Œ */
+  word-wrap: break-word;  /* ç¡®ä¿é•¿å•è¯æ¢è¡Œ */
+  display: inline-block;  /* ä½¿æ°”æ³¡å®½åº¦æ ¹æ®å†…å®¹åŠ¨æ€å˜åŒ– */
+  padding: 15px 15px;  /* è®¾ç½®æ°”æ³¡çš„å†…è¾¹è· */
+  border-radius: 10px;  /* æ°”æ³¡çš„åœ†è§’æ•ˆæœ */
+  position: relative;  /* ä¸ºæ—¶é—´æˆ³æä¾›å®šä½ä¸Šä¸‹æ–‡ */
+  overflow: visible;  /* ç¡®ä¿å†…å®¹ä¸è¢«è£å‰ª */
 }
 
 .model-bubble {
@@ -167,10 +167,10 @@
   padding: 20px 15px 50px 15px;
   border-radius: 10px;
   position: relative;
-  overflow: visible;  /* È·±£ÄÚÈİ²»±»²Ã¼ô */
+  overflow: visible;  /* ç¡®ä¿å†…å®¹ä¸è¢«è£å‰ª */
 }
 
-/* ÊäÈë¿òÇøÓò */
+/* è¾“å…¥æ¡†åŒºåŸŸ */
 .chat-input-container {
   display: flex;
   padding: 10px;
@@ -188,7 +188,7 @@
   border: 1px solid #ccc;
   transition: background-color 0.3s, color 0.3s;
   font-size: 1em;
-  resize: none;  /* ½ûÖ¹ textarea µÄÊÖ¶¯µ÷Õû´óĞ¡ */
+  resize: none;  /* ç¦æ­¢ textarea çš„æ‰‹åŠ¨è°ƒæ•´å¤§å° */
 }
 
 .send-button {
@@ -207,24 +207,24 @@
   background-color: #0056b3;
 }
 
-/* Ê±¼ä´ÁÑùÊ½ */
+/* æ—¶é—´æˆ³æ ·å¼ */
 .timestamp {
   font-size: 0.75em;
   color: #888;
   position: absolute;
   /* margin-top: -50px; */
-  bottom: 0.5px;  /*¹Ì¶¨ÔÚÆøÅİµÄµ×²¿*/
-  right: 5px;  /* ¿¿ÓÒ¶ÔÆë */
+  bottom: 0.5px;  /*å›ºå®šåœ¨æ°”æ³¡çš„åº•éƒ¨*/
+  right: 5px;  /* é å³å¯¹é½ */
 }
 
 .button-container {
   display: flex;
   gap: 10px;
-  position: absolute;  /* Ê¹ÓÃ¾ø¶Ô¶¨Î» */
-  margin-top: -5px; /*Ê¹ÓÃ¸ºµÄ margin ½«°´Å¥ÏòÉÏÀ­ */
-  left: 10px;   /* ¿ÉÒÔµ÷Õûµ½ĞèÒªµÄË®Æ½Î»ÖÃ */
+  position: absolute;  /* ä½¿ç”¨ç»å¯¹å®šä½ */
+  margin-top: -5px; /*ä½¿ç”¨è´Ÿçš„ margin å°†æŒ‰é’®å‘ä¸Šæ‹‰ */
+  left: 10px;   /* å¯ä»¥è°ƒæ•´åˆ°éœ€è¦çš„æ°´å¹³ä½ç½® */
   font-size: 0.75em;
-  align-items: center; /* ´¹Ö±¾ÓÖĞ¶ÔÆëÍ¼±ê */
+  align-items: center; /* å‚ç›´å±…ä¸­å¯¹é½å›¾æ ‡ */
 }
 
 .copy-button, .retry-button, .favorite-button {
@@ -233,7 +233,7 @@
   border: none;
   color: #555;
   font-size: 0.75em;
-  padding: 0 4px; /* ¼õÉÙ×óÓÒ¼ä¾àÒÔÊ¹Í¼±ê¸ü½ô´Õ */
+  padding: 0 4px; /* å‡å°‘å·¦å³é—´è·ä»¥ä½¿å›¾æ ‡æ›´ç´§å‡‘ */
 }
 
 .copy-button:hover, .retry-button:hover, .favorite-button:hover {

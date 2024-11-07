@@ -2,13 +2,13 @@
 
 export const showIcon = (x, y, onClick) => {
 
-  // Èç¹ûÒÑÓÐÍ¼±ê´æÔÚ£¬ÏÈÒÆ³ý
+  // å¦‚æžœå·²æœ‰å›¾æ ‡å­˜åœ¨ï¼Œå…ˆç§»é™¤
   const existingIcon = document.getElementById('custom-selected-icon');
   if (existingIcon) {
     existingIcon.remove();
   }
 
-  // ´´½¨Í¼±ê
+  // åˆ›å»ºå›¾æ ‡
   const icon = document.createElement('div');
   icon.id = 'custom-selected-icon';
   icon.innerHTML = `
@@ -38,7 +38,7 @@ export const showIcon = (x, y, onClick) => {
       </defs>
     </svg>`;
 
-  // ÉèÖÃÍ¼±êÑùÊ½
+  // è®¾ç½®å›¾æ ‡æ ·å¼
   icon.style.position = 'absolute';
   icon.style.top = `${y}px`;
   icon.style.left = `${x}px`;
@@ -52,19 +52,19 @@ export const showIcon = (x, y, onClick) => {
   icon.style.justifyContent = 'center';
   icon.style.pointerEvents = 'auto';
 
-   // °ó¶¨µã»÷ÊÂ¼þ²¢È·ÈÏ°ó¶¨³É¹¦
+   // ç»‘å®šç‚¹å‡»äº‹ä»¶å¹¶ç¡®è®¤ç»‘å®šæˆåŠŸ
    icon.addEventListener('click',() => {
     console.log("Icon clicked");
-    console.log("onclick is:", onClick); // ²é¿´ onclick ÊÇ·ñ´æÔÚ
+    console.log("onclick is:", onClick); // æŸ¥çœ‹ onclick æ˜¯å¦å­˜åœ¨
     onClick();
-    document.body.removeChild(icon);  // ÒÆ³ýÍ¼±ê  
+    document.body.removeChild(icon);  // ç§»é™¤å›¾æ ‡  
   });
 
   document.body.appendChild(icon);
   console.log('Icon added to document.');
 };
 
-// ÒÆ³ýÍ¼±êµÄº¯Êý
+// ç§»é™¤å›¾æ ‡çš„å‡½æ•°
 export const removeIcon = () => {
   const icon = document.getElementById('custom-selected-icon');
   if (icon) {
