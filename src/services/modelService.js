@@ -1,6 +1,6 @@
 import fetchSSE from '../utils/fetchSSE';
 import { marked } from 'marked';
-
+import { saveHistory } from './historyService';  // 引入 saveHistory 函数
 const apiKey = process.env.API_KEY;
 let controller; // 定义控制器
 // 全局变量，用于管理正常回复和重新回复的气泡 ID
@@ -20,6 +20,7 @@ export async function sendMessageToModel(message, onUserMessage, onModelMessage,
   // 显示用户的消息（只在正常回复时显示）
   if (!isRetry) {
     onUserMessage({ role: 'user', content: message, timestamp, loading: false, id: userBubbleId });
+    saveHistory('user', message); // 保存用户消息到历史记录
     originalUserInput = message; // 更新 originalUserInput 为最新的用户输入
     globalState.retryBubbleId = null; // 清除之前的重试气泡 ID
   }
@@ -114,6 +115,7 @@ export async function sendMessageToModel(message, onUserMessage, onModelMessage,
         loading: false,
         id: modelBubbleId,
       });
+      saveHistory('model', modelResponseContent);  // 保存模型回复到历史记录
       bindButtonEvents(modelBubbleId, modelResponseContent, onModelMessage, setIsSending);
 
       // 仅在正常回复时，保存气泡 ID 为 retryBubbleId

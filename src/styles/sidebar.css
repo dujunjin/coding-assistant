@@ -272,3 +272,47 @@
 }
 
 
+/* styles.css */
+
+.history-modal {
+  position: fixed;      /* 固定在屏幕上的某个位置 */
+  top: 20%;             /* 根据需求调整位置 */
+  right: 20%;           /* 可以调整为你想要的相对页面位置 */
+  width: 300px;         /* 设置合适的宽度 */
+  max-height: 400px;    /* 设置最大高度 */
+  overflow-y: auto;     /* 如果内容超出，出现滚动条 */
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;        /* 保证浮动框在其他内容之上，但不会覆盖整个页面 */
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.2em;
+  cursor: pointer;
+  color: #333;
+}
+
+.history-item {
+  margin-bottom: 15px;
+}
+
+.history-item strong {
+  display: block;
+  font-weight: bold;
+}
+
+.history-item .timestamp {
+  display: block;
+  font-size: 0.9em;
+  color: #888;
+}
+
+.history-modal h2 {
+  margin-top: 0;
+  font-size: 1.5em;
+  color: #333;
+}
