@@ -3,32 +3,6 @@ import { marked } from 'marked';
 
 const apiKey = process.env.API_KEY;
 let controller; // 定义控制器
-<<<<<<< HEAD
-
-export async function sendMessageToModel(message, onUserMessage, onModelMessage) {
-  controller = new AbortController(); // 创建控制器实例
-  const { signal } = controller;
-  console.log("Creating new AbortController", controller);
-
-  
-  const timestamp = new Date().toLocaleTimeString();
-  const userBubbleId = Date.now();
-  console.log('userBubbleId: ', userBubbleId);
-
-  // 显示用户的消息
-  onUserMessage({ role: 'user', content: message, timestamp, loading: false, id: userBubbleId});
-
-  // 添加“模型正在思考中...”的加载气泡
-  const loadingBubbleId = Date.now()+1; // 用于唯一标识加载气泡
-  console.log('loadingBubbleId: ', loadingBubbleId);
-  onModelMessage({ role: 'system', content: '模型正在思考中...', timestamp: '', loading: true, id: loadingBubbleId });
-
-  let modelResponseContent = "";
-  let modelBubbleId = null; // 用于存储模型气泡的唯一 ID，以便后续更新内容
-
-  try {
-    // 使用 fetchSSE 函数处理流式响应
-=======
 // 全局变量，用于管理正常回复和重新回复的气泡 ID
 const globalState = {
   currentModelBubbleId: null, // 正常回复的气泡 ID
@@ -71,16 +45,11 @@ export async function sendMessageToModel(message, onUserMessage, onModelMessage,
 
   try {
     setIsSending(true); // 设置发送中状态
->>>>>>> feature-branch
     await fetchSSE('https://api.deepseek.com/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-<<<<<<< HEAD
-        'Authorization': `Bearer ${apiKey}`  
-=======
         'Authorization': `Bearer ${apiKey}`
->>>>>>> feature-branch
       },
       body: JSON.stringify({
         model: "deepseek-chat",
@@ -96,36 +65,6 @@ export async function sendMessageToModel(message, onUserMessage, onModelMessage,
           const parsedData = JSON.parse(data);
           if (parsedData.choices && parsedData.choices[0] && parsedData.choices[0].delta) {
             const content = parsedData.choices[0].delta.content || "";
-<<<<<<< HEAD
-
-            // 累积模型响应内容
-            modelResponseContent += content;
-
-            // 删除“模型正在思考中...”加载气泡（仅删除一次）
-            if (!modelBubbleId) {
-              onModelMessage({ role: 'system', content: '', loading: false, id: loadingBubbleId });
-              
-              // 首次接收内容时创建模型气泡并存储其 ID
-              modelBubbleId = Date.now()+2;
-              console.log('modelBubbleId: ', modelBubbleId);
-              onModelMessage({
-                role: 'model',
-                content: marked.parse(modelResponseContent), // 初次渲染 Markdown
-                timestamp: timestamp,
-                loading: true,
-                id: modelBubbleId,
-              });
-            } else {
-              // 更新已有的模型气泡内容，解析 Markdown
-              onModelMessage({
-                role: 'model',
-                content: marked.parse(modelResponseContent), // 持续更新 Markdown
-                timestamp: timestamp,
-                loading: true,
-                id: modelBubbleId,
-              });
-            }
-=======
             modelResponseContent += content;
 
             if ((isRetry&&isFirstUpdate))
@@ -157,7 +96,6 @@ export async function sendMessageToModel(message, onUserMessage, onModelMessage,
               loading: true,
               id: modelBubbleId,
             });
->>>>>>> feature-branch
           }
         } catch (err) {
           console.error("解析数据时出错：", err);
@@ -166,27 +104,11 @@ export async function sendMessageToModel(message, onUserMessage, onModelMessage,
     });
 
     // 响应完成后更新模型的最终消息并移除加载状态
-<<<<<<< HEAD
-    console.log('modelBubbleId: ', modelBubbleId);
     if (modelBubbleId) {
-
-=======
-    if (modelBubbleId) {
->>>>>>> feature-branch
       const finalContent = marked.parse(modelResponseContent.trim());
       const contentWithButton = `${finalContent.trim()}${generateButtonHTML(modelBubbleId).trim()}`;
       onModelMessage({
         role: 'model',
-<<<<<<< HEAD
-        content: contentWithButton, // 最终渲染 Markdown
-        timestamp: timestamp,
-        loading: false,
-        id: modelBubbleId, // 使用已有的气泡 ID
-      });
-
-       // 绑定按钮事件
-       bindButtonEvents(modelBubbleId, modelResponseContent, onModelMessage);
-=======
         content: contentWithButton,
         timestamp: timestamp,
         loading: false,
@@ -199,7 +121,6 @@ export async function sendMessageToModel(message, onUserMessage, onModelMessage,
         globalState.retryBubbleId = modelBubbleId;
         console.log("first : ", modelBubbleId);
       }
->>>>>>> feature-branch
     }
 
   } catch (error) {
@@ -208,11 +129,8 @@ export async function sendMessageToModel(message, onUserMessage, onModelMessage,
     } else {
       onModelMessage({ role: 'error', content: '错误：无法连接到模型', timestamp });
     }
-<<<<<<< HEAD
-=======
   }finally {
     setIsSending(false); // 请求完成后设置为未发送状态
->>>>>>> feature-branch
   }
 }
 
@@ -221,11 +139,8 @@ export function cancelMessage() {
   if (controller) controller.abort();
 }
 
-<<<<<<< HEAD
-=======
 
 
->>>>>>> feature-branch
 // 生成按钮 HTML 的辅助函数
 function generateButtonHTML(id) {
   return `
@@ -273,35 +188,11 @@ function generateButtonHTML(id) {
   `;
 }
 
-<<<<<<< HEAD
-
-
-// 绑定按钮事件的辅助函数
-function bindButtonEvents(id, content, onModelMessage) {
-=======
 function bindButtonEvents(id, content, onModelMessage, setIsSending) {
->>>>>>> feature-branch
   const copyButton = document.querySelector(`#button-container-${String(id)} .copy-button`);
   const retryButton = document.querySelector(`#button-container-${String(id)} .retry-button`);
   const favoriteButton = document.querySelector(`#button-container-${String(id)} .favorite-button`);
 
-<<<<<<< HEAD
-  if (copyButton) {
-    copyButton.addEventListener('click', () => {
-      navigator.clipboard.writeText(content).then(() => {
-        alert('已复制到剪贴板');
-      });
-    });
-  }
-
-  if (retryButton) {
-    retryButton.addEventListener('click', () => {
-      onModelMessage({ role: 'system', content: '重新回复中...', timestamp: '', loading: true });
-      sendMessageToModel(content, onModelMessage); // 重新调用模型服务
-    });
-  }
-
-=======
   // 处理复制按钮
   if (copyButton) {
     copyButton.addEventListener('click', () => {
@@ -327,7 +218,6 @@ function bindButtonEvents(id, content, onModelMessage, setIsSending) {
   }
 
   // 处理收藏按钮
->>>>>>> feature-branch
   if (favoriteButton) {
     favoriteButton.addEventListener('click', () => {
       saveFavorite(content);
@@ -336,8 +226,6 @@ function bindButtonEvents(id, content, onModelMessage, setIsSending) {
   }
 }
 
-<<<<<<< HEAD
-=======
 
 //复制功能的辅助函数
 function fallbackCopyTextToClipboard(text) {
@@ -358,7 +246,6 @@ function fallbackCopyTextToClipboard(text) {
   document.body.removeChild(textArea);
 }
 
->>>>>>> feature-branch
 // 收藏功能的辅助函数
 function saveFavorite(content) {
   const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
