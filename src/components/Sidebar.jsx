@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { sendMessageToModel } from '../services/modelService';
+import { sendMessageToModel, cancelMessage } from '../services/modelService'; // 新增 cancelMessage
 import '../styles/sidebar.css';
 
 const Sidebar = ({ selectedText, onClose }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+  const [isSending, setIsSending] = useState(false); // 新增状态变量
 
   useEffect(() => {
     if (selectedText) {
@@ -54,13 +55,20 @@ const Sidebar = ({ selectedText, onClose }) => {
   
   
 
-  const handleSend = () => {
-    if (!input.trim()) return;
-    const messageContent = input;
-    setInput('');
-    sendMessageToModel(messageContent, addMessage, addMessage);
+  const handleSendClick = () => {
+    if (isSending) {
+      // 当前为“中断”状态，取消请求
+      cancelMessage();
+      setIsSending(false); // 切换回“发送”状态
+    } else {
+      // 当前为“发送”状态，发送消息
+      if (!input.trim()) return;
+      const messageContent = input;
+      setInput(''); // 清空输入框
+      setIsSending(true); // 设置为“发送中”状态
+      sendMessageToModel(messageContent, addMessage, addMessage, setIsSending); // 传递 setIsSending 以更新状态
+    }
   };
-
   return (
     <div id="custom-sidebar" className="sidebar-container">
       <div className="sidebar-title-bar">
@@ -110,7 +118,9 @@ const Sidebar = ({ selectedText, onClose }) => {
             }
           }}
         />
-        <button className="send-button" onClick={handleSend}>发送</button>
+        <button className="send-button" onClick={handleSendClick}>
+          {isSending ? "中断" : "发送"}
+        </button>
       </div>
     </div>
   );

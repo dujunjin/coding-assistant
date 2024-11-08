@@ -2,7 +2,7 @@ import fetchSSE from '../utils/fetchSSE';
 import { marked } from 'marked';
 
 const apiKey = process.env.API_KEY;
-
+let controller; // 定义控制器
 // 全局变量，用于管理正常回复和重新回复的气泡 ID
 const globalState = {
   currentModelBubbleId: null, // 正常回复的气泡 ID
@@ -10,7 +10,10 @@ const globalState = {
 };
 let originalUserInput = null;  // 原始用户输入
 
-export async function sendMessageToModel(message, onUserMessage, onModelMessage, isRetry = false) {
+export async function sendMessageToModel(message, onUserMessage, onModelMessage, setIsSending, isRetry = false) {
+  controller = new AbortController(); // 创建控制器实例
+  const { signal } = controller;
+  console.log("Creating new AbortController", controller);
   const timestamp = new Date().toLocaleTimeString();
   const userBubbleId = Date.now();
 
@@ -41,6 +44,7 @@ export async function sendMessageToModel(message, onUserMessage, onModelMessage,
   let modelResponseContent = "";
 
   try {
+    setIsSending(true); // 设置发送中状态
     await fetchSSE('https://api.deepseek.com/chat/completions', {
       method: 'POST',
       headers: {
@@ -55,6 +59,7 @@ export async function sendMessageToModel(message, onUserMessage, onModelMessage,
         ],
         stream: true,
       }),
+      signal,
       onMessage: (data) => {
         try {
           const parsedData = JSON.parse(data);
@@ -109,7 +114,7 @@ export async function sendMessageToModel(message, onUserMessage, onModelMessage,
         loading: false,
         id: modelBubbleId,
       });
-      bindButtonEvents(modelBubbleId, modelResponseContent, onModelMessage);
+      bindButtonEvents(modelBubbleId, modelResponseContent, onModelMessage, setIsSending);
 
       // 仅在正常回复时，保存气泡 ID 为 retryBubbleId
       if (!isRetry) {
@@ -119,13 +124,20 @@ export async function sendMessageToModel(message, onUserMessage, onModelMessage,
     }
 
   } catch (error) {
-    // 处理网络或请求错误
-    onModelMessage({ role: 'error', content: '错误：无法连接到模型，请稍后再试。', timestamp });
-    console.error("详细错误信息：", error);
+    if (error.name === 'AbortError') {
+      onModelMessage({ role: 'system', content: '请求已中断', timestamp: '' });
+    } else {
+      onModelMessage({ role: 'error', content: '错误：无法连接到模型', timestamp });
+    }
+  }finally {
+    setIsSending(false); // 请求完成后设置为未发送状态
   }
 }
 
-
+// 新增 cancelMessage 函数，用于中断请求
+export function cancelMessage() {
+  if (controller) controller.abort();
+}
 
 
 
@@ -176,12 +188,12 @@ function generateButtonHTML(id) {
   `;
 }
 
-// 绑定按钮事件的辅助函数
-function bindButtonEvents(id, content,  onModelMessage) {
+function bindButtonEvents(id, content, onModelMessage, setIsSending) {
   const copyButton = document.querySelector(`#button-container-${String(id)} .copy-button`);
   const retryButton = document.querySelector(`#button-container-${String(id)} .retry-button`);
   const favoriteButton = document.querySelector(`#button-container-${String(id)} .favorite-button`);
-  
+
+  // 处理复制按钮
   if (copyButton) {
     copyButton.addEventListener('click', () => {
       fallbackCopyTextToClipboard(content);
@@ -190,17 +202,22 @@ function bindButtonEvents(id, content,  onModelMessage) {
     console.warn('未找到 copyButton，检查选择器是否正确');
   }
 
+  // 处理重试按钮
   if (retryButton) {
     retryButton.addEventListener('click', () => {
-
       if (originalUserInput) {
-        sendMessageToModel(originalUserInput, null, onModelMessage, true); 
+        // 设置发送状态为 true，表示开始发送请求
+        setIsSending(true);
+
+        // 调用 sendMessageToModel 函数，重试时传递 setIsSending
+        sendMessageToModel(originalUserInput, null, onModelMessage, setIsSending, true);
       } else {
         console.error("未找到原始用户输入");
       }
     });
   }
 
+  // 处理收藏按钮
   if (favoriteButton) {
     favoriteButton.addEventListener('click', () => {
       saveFavorite(content);
