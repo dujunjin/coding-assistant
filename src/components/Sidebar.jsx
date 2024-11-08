@@ -6,6 +6,7 @@ const Sidebar = ({ selectedText, onClose }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isSending, setIsSending] = useState(false); // 新增状态变量
+  const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);// 控制更多菜单的显示
 
   useEffect(() => {
     if (selectedText) {
@@ -33,6 +34,11 @@ const Sidebar = ({ selectedText, onClose }) => {
         }
       }
 
+      if (newMessage.role === 'model' && !newMessage.loading && newMessage.content === '') {
+        console.log("Removing model bubble:", newMessage.id);
+        return prevMessages.filter((msg) => msg.id !== newMessage.id);
+      }
+
       // 如果是最终更新且 loading 为 false，则更新最后一个 model 消息
       if (newMessage.role === 'model' && !newMessage.loading) {
         const lastMessageIndex = prevMessages.length - 1;
@@ -58,14 +64,11 @@ const Sidebar = ({ selectedText, onClose }) => {
       // 当前为“发送”状态，发送消息
       if (!input.trim()) return;
       const messageContent = input;
-      setInput('');
-      setIsSending(true); // 切换按钮状态
-      sendMessageToModel(messageContent, addMessage, addMessage).finally(() => {
-        setIsSending(false); // 响应完成后切回“发送”状态
-      });
+      setInput(''); // 清空输入框
+      setIsSending(true); // 设置为“发送中”状态
+      sendMessageToModel(messageContent, addMessage, addMessage, setIsSending); // 传递 setIsSending 以更新状态
     }
   };
-
   return (
     <div id="custom-sidebar" className="sidebar-container">
       <div className="sidebar-title-bar">
@@ -79,7 +82,7 @@ const Sidebar = ({ selectedText, onClose }) => {
           <button className="pin-icon" onClick={() => console.log('Pin icon clicked')}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_406_221)"><path d="M2.12299 24.0004L8.56699 17.5564L13.467 22.4564L14.527 21.3954C15.5718 20.3422 16.3231 19.0342 16.7064 17.6011C17.0897 16.1679 17.0916 14.6595 16.712 13.2254L20.055 9.87138L20.548 10.3654C20.8806 10.7148 21.3258 10.9357 21.8053 10.9891C22.2847 11.0425 22.7676 10.925 23.169 10.6574C23.4041 10.4894 23.5998 10.2724 23.7426 10.0213C23.8854 9.77018 23.9719 9.49101 23.996 9.20314C24.0202 8.91527 23.9815 8.62559 23.8825 8.35418C23.7836 8.08278 23.6268 7.83614 23.423 7.63138L16.455 0.641378C16.1224 0.291951 15.6772 0.0710828 15.1977 0.0176684C14.7183 -0.0357459 14.2353 0.0817191 13.834 0.349378C13.5989 0.517307 13.4032 0.734353 13.2604 0.985465C13.1176 1.23658 13.0311 1.51575 13.0069 1.80362C12.9828 2.09149 13.0215 2.38117 13.1205 2.65257C13.2194 2.92398 13.3762 3.17061 13.58 3.37538L14.139 3.93538L10.789 7.30038L10.725 7.28038C9.29794 6.91063 7.79918 6.91905 6.37637 7.30483C4.95357 7.6906 3.65582 8.44041 2.61099 9.48038L1.54999 10.5374L6.44999 15.4374L-7.62939e-06 21.8774L2.12299 24.0004ZM9.88399 10.1534L11.617 10.7144L16.257 6.06038L17.934 7.74138L13.3 12.3914L13.825 14.0334C14.176 15.3906 13.9935 16.8307 13.315 18.0574L5.94199 10.6864C7.13991 10.0124 8.55011 9.82173 9.88399 10.1534Z" fill="white"/></g><defs><clipPath id="clip0_406_221"><rect width="24" height="24" fill="white"/></clipPath></defs></svg>
           </button>
-          <button className="more-icon" onClick={() => console.log('More icon clicked')}>
+          <button className="more-icon" onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_406_170)"><path d="M0 3V11H11V0H3C2.20435 0 1.44129 0.31607 0.87868 0.87868C0.31607 1.44129 0 2.20435 0 3H0ZM3 3H8V8H3V3Z" fill="white"/><path d="M20.9998 0H12.9998V11H23.9998V3C23.9998 2.20435 23.6838 1.44129 23.1212 0.87868C22.5585 0.31607 21.7955 0 20.9998 0V0ZM20.9998 8H15.9998V3H20.9998V8Z" fill="white"/><path d="M0 21C0 21.7956 0.31607 22.5587 0.87868 23.1213C1.44129 23.6839 2.20435 24 3 24H11V13H0V21ZM3 16H8V21H3V16Z" fill="white"/><path d="M12.9998 24H20.9998C21.7955 24 22.5585 23.6839 23.1212 23.1213C23.6838 22.5587 23.9998 21.7956 23.9998 21V13H12.9998V24ZM15.9998 16H20.9998V21H15.9998V16Z" fill="white"/></g><defs><clipPath id="clip0_406_170"><rect width="24" height="24" fill="white"/></clipPath></defs></svg>
           </button>
           <button className="close-icon" onClick={onClose}>
@@ -119,6 +122,16 @@ const Sidebar = ({ selectedText, onClose }) => {
           {isSending ? "中断" : "发送"}
         </button>
       </div>
+      {/* 弹窗菜单 */}
+      {isMoreMenuOpen && (
+        <div className="more-menu">
+          <ul>
+            <li onClick={() => { setIsMoreMenuOpen(false); console.log('Favorites clicked'); }}>收藏夹</li>
+            <li onClick={() => { setIsMoreMenuOpen(false); console.log('Settings clicked'); }}>设置</li>
+            <li onClick={() => { setIsMoreMenuOpen(false); console.log('History clicked'); }}>历史记录</li>
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

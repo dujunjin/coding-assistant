@@ -3,6 +3,7 @@ import { marked } from 'marked';
 
 const apiKey = process.env.API_KEY;
 let controller; // 定义控制器
+<<<<<<< HEAD
 
 export async function sendMessageToModel(message, onUserMessage, onModelMessage) {
   controller = new AbortController(); // 创建控制器实例
@@ -27,11 +28,59 @@ export async function sendMessageToModel(message, onUserMessage, onModelMessage)
 
   try {
     // 使用 fetchSSE 函数处理流式响应
+=======
+// 全局变量，用于管理正常回复和重新回复的气泡 ID
+const globalState = {
+  currentModelBubbleId: null, // 正常回复的气泡 ID
+  retryBubbleId: null,        // 重新回复的气泡 ID
+};
+let originalUserInput = null;  // 原始用户输入
+
+export async function sendMessageToModel(message, onUserMessage, onModelMessage, setIsSending, isRetry = false) {
+  controller = new AbortController(); // 创建控制器实例
+  const { signal } = controller;
+  console.log("Creating new AbortController", controller);
+  const timestamp = new Date().toLocaleTimeString();
+  const userBubbleId = Date.now();
+
+  // 显示用户的消息（只在正常回复时显示）
+  if (!isRetry) {
+    onUserMessage({ role: 'user', content: message, timestamp, loading: false, id: userBubbleId });
+    originalUserInput = message; // 更新 originalUserInput 为最新的用户输入
+    globalState.retryBubbleId = null; // 清除之前的重试气泡 ID
+  }
+
+  // 根据是否为重试决定气泡处理
+  let modelBubbleId = null;
+  let loadingBubbleId = null;
+  let isFirstUpdate = true; // 标志，用于控制只清除一次“重新回复中...”的内容
+  loadingBubbleId = Date.now() + 1;
+
+  if (isRetry) {
+    // 重试情况下复用 retryBubbleId，并显示“重新回复中…”
+    modelBubbleId = globalState.retryBubbleId;
+    console.log("second : ", modelBubbleId);
+    onModelMessage({ role: 'model', content: '', loading: false, id: modelBubbleId});
+    onModelMessage({ role: 'system', content: '重新回复中...', timestamp: '', loading: true, id: modelBubbleId });
+  } else {
+    // 正常情况下创建新的“模型正在思考中…”气泡
+    onModelMessage({ role: 'system', content: '模型正在思考中...', timestamp: '', loading: true, id: loadingBubbleId });
+  }
+
+  let modelResponseContent = "";
+
+  try {
+    setIsSending(true); // 设置发送中状态
+>>>>>>> feature-branch
     await fetchSSE('https://api.deepseek.com/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+<<<<<<< HEAD
         'Authorization': `Bearer ${apiKey}`  
+=======
+        'Authorization': `Bearer ${apiKey}`
+>>>>>>> feature-branch
       },
       body: JSON.stringify({
         model: "deepseek-chat",
@@ -47,6 +96,7 @@ export async function sendMessageToModel(message, onUserMessage, onModelMessage)
           const parsedData = JSON.parse(data);
           if (parsedData.choices && parsedData.choices[0] && parsedData.choices[0].delta) {
             const content = parsedData.choices[0].delta.content || "";
+<<<<<<< HEAD
 
             // 累积模型响应内容
             modelResponseContent += content;
@@ -75,6 +125,39 @@ export async function sendMessageToModel(message, onUserMessage, onModelMessage)
                 id: modelBubbleId,
               });
             }
+=======
+            modelResponseContent += content;
+
+            if ((isRetry&&isFirstUpdate))
+            {
+              onModelMessage({ role: 'system', content: '', loading: false, id: modelBubbleId});
+              isFirstUpdate = false; // 设置标志，确保只清除一次
+            }
+            else if(!modelBubbleId)
+            {
+              onModelMessage({ role: 'system', content: '', loading: false, id: loadingBubbleId });
+              modelBubbleId = loadingBubbleId;
+            }
+
+            // if (isRetry && isFirstUpdate) {
+            //   // 清除“重新回复中…”的内容并显示新内容
+            //   onModelMessage({ role: 'system', content: '', loading: false, id: modelBubbleId });
+            //   isFirstUpdate = false; // 设置标志，确保只清除一次
+            // } else if (!modelBubbleId) {
+            //   // 正常回复的情况下，首次接收数据时替换“模型正在思考中…”气泡
+            //   modelBubbleId = loadingBubbleId; // 使用 loadingBubbleId 作为最终模型气泡 ID
+            //   globalState.currentModelBubbleId = modelBubbleId; // 更新 currentModelBubbleId
+            // }
+            
+            // 更新气泡内容为当前模型响应
+            onModelMessage({
+              role: 'model',
+              content: marked.parse(modelResponseContent),
+              timestamp: timestamp,
+              loading: true,
+              id: modelBubbleId,
+            });
+>>>>>>> feature-branch
           }
         } catch (err) {
           console.error("解析数据时出错：", err);
@@ -83,13 +166,18 @@ export async function sendMessageToModel(message, onUserMessage, onModelMessage)
     });
 
     // 响应完成后更新模型的最终消息并移除加载状态
+<<<<<<< HEAD
     console.log('modelBubbleId: ', modelBubbleId);
     if (modelBubbleId) {
 
+=======
+    if (modelBubbleId) {
+>>>>>>> feature-branch
       const finalContent = marked.parse(modelResponseContent.trim());
       const contentWithButton = `${finalContent.trim()}${generateButtonHTML(modelBubbleId).trim()}`;
       onModelMessage({
         role: 'model',
+<<<<<<< HEAD
         content: contentWithButton, // 最终渲染 Markdown
         timestamp: timestamp,
         loading: false,
@@ -98,6 +186,20 @@ export async function sendMessageToModel(message, onUserMessage, onModelMessage)
 
        // 绑定按钮事件
        bindButtonEvents(modelBubbleId, modelResponseContent, onModelMessage);
+=======
+        content: contentWithButton,
+        timestamp: timestamp,
+        loading: false,
+        id: modelBubbleId,
+      });
+      bindButtonEvents(modelBubbleId, modelResponseContent, onModelMessage, setIsSending);
+
+      // 仅在正常回复时，保存气泡 ID 为 retryBubbleId
+      if (!isRetry) {
+        globalState.retryBubbleId = modelBubbleId;
+        console.log("first : ", modelBubbleId);
+      }
+>>>>>>> feature-branch
     }
 
   } catch (error) {
@@ -106,6 +208,11 @@ export async function sendMessageToModel(message, onUserMessage, onModelMessage)
     } else {
       onModelMessage({ role: 'error', content: '错误：无法连接到模型', timestamp });
     }
+<<<<<<< HEAD
+=======
+  }finally {
+    setIsSending(false); // 请求完成后设置为未发送状态
+>>>>>>> feature-branch
   }
 }
 
@@ -114,6 +221,11 @@ export function cancelMessage() {
   if (controller) controller.abort();
 }
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> feature-branch
 // 生成按钮 HTML 的辅助函数
 function generateButtonHTML(id) {
   return `
@@ -161,14 +273,19 @@ function generateButtonHTML(id) {
   `;
 }
 
+<<<<<<< HEAD
 
 
 // 绑定按钮事件的辅助函数
 function bindButtonEvents(id, content, onModelMessage) {
+=======
+function bindButtonEvents(id, content, onModelMessage, setIsSending) {
+>>>>>>> feature-branch
   const copyButton = document.querySelector(`#button-container-${String(id)} .copy-button`);
   const retryButton = document.querySelector(`#button-container-${String(id)} .retry-button`);
   const favoriteButton = document.querySelector(`#button-container-${String(id)} .favorite-button`);
 
+<<<<<<< HEAD
   if (copyButton) {
     copyButton.addEventListener('click', () => {
       navigator.clipboard.writeText(content).then(() => {
@@ -184,6 +301,33 @@ function bindButtonEvents(id, content, onModelMessage) {
     });
   }
 
+=======
+  // 处理复制按钮
+  if (copyButton) {
+    copyButton.addEventListener('click', () => {
+      fallbackCopyTextToClipboard(content);
+    });
+  } else {
+    console.warn('未找到 copyButton，检查选择器是否正确');
+  }
+
+  // 处理重试按钮
+  if (retryButton) {
+    retryButton.addEventListener('click', () => {
+      if (originalUserInput) {
+        // 设置发送状态为 true，表示开始发送请求
+        setIsSending(true);
+
+        // 调用 sendMessageToModel 函数，重试时传递 setIsSending
+        sendMessageToModel(originalUserInput, null, onModelMessage, setIsSending, true);
+      } else {
+        console.error("未找到原始用户输入");
+      }
+    });
+  }
+
+  // 处理收藏按钮
+>>>>>>> feature-branch
   if (favoriteButton) {
     favoriteButton.addEventListener('click', () => {
       saveFavorite(content);
@@ -192,6 +336,29 @@ function bindButtonEvents(id, content, onModelMessage) {
   }
 }
 
+<<<<<<< HEAD
+=======
+
+//复制功能的辅助函数
+function fallbackCopyTextToClipboard(text) {
+  const textArea = document.createElement('textarea');
+  textArea.value = text;
+  textArea.style.position = 'fixed';
+  textArea.style.opacity = '0';
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  try {
+    document.execCommand('copy');
+    alert('已复制到剪贴板');
+  } catch (err) {
+    console.error('复制到剪贴板失败:', err);
+    alert('复制失败，请手动复制');
+  }
+  document.body.removeChild(textArea);
+}
+
+>>>>>>> feature-branch
 // 收藏功能的辅助函数
 function saveFavorite(content) {
   const favorites = JSON.parse(localStorage.getItem('favorites')) || [];

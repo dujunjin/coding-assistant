@@ -240,4 +240,38 @@
   color: #007bff;
 }
 
+<<<<<<< HEAD
+=======
+/*DJJ更多菜单*/
+.more-menu {
+  position: absolute;
+  right: 10px;
+  top: 50px;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  z-index: 1000;
+}
+
+.more-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.more-menu li {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.more-menu li:hover {
+  background-color: #f0f0f0;
+}
+
+.more-menu li.history:hover {
+  background-color: #e0e0e0; /* 为历史记录悬停状态设置不同的背景色 */
+}
+
+>>>>>>> feature-branch
 
