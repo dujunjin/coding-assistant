@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { sendMessageToModel, cancelMessage } from '../services/modelService'; // 新增 cancelMessage
+import HistoryModal from './HistoryModal';
 import '../styles/sidebar.css';
 
 const Sidebar = ({selectedText, onClose, onOpenFavorites}) => {
@@ -7,6 +8,8 @@ const Sidebar = ({selectedText, onClose, onOpenFavorites}) => {
   const [input, setInput] = useState('');
   const [isSending, setIsSending] = useState(false); // 新增状态变量
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);// 控制更多菜单的显示
+  const [isHistoryModalVisible, setIsHistoryModalVisible] = useState(false);
+
   useEffect(() => {
     if (selectedText) {
       setInput(selectedText);
@@ -127,10 +130,15 @@ const Sidebar = ({selectedText, onClose, onOpenFavorites}) => {
           <ul>
             <li onClick={() => { setIsMoreMenuOpen(false); onOpenFavorites(); }}>收藏夹</li>
             <li onClick={() => { setIsMoreMenuOpen(false); console.log('Settings clicked'); }}>设置</li>
-            <li onClick={() => { setIsMoreMenuOpen(false); console.log('History clicked'); }}>历史记录</li>
+            <li onClick={() => { setIsMoreMenuOpen(false); setIsHistoryModalVisible(true); }}>历史记录</li>
           </ul>
         </div>
       )}
+      {}
+      <HistoryModal
+        isVisible={isHistoryModalVisible}
+        onClose={() => setIsHistoryModalVisible(false)}
+      />
     </div>
   );
 };

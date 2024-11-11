@@ -1,7 +1,7 @@
 import fetchSSE from '../utils/fetchSSE';
 import { marked } from 'marked';
 import {saveFavorite} from '../services/favoriteService'
-
+import { saveHistory } from './historyService';
 
 const apiKey = process.env.API_KEY;
 let controller;
@@ -30,6 +30,7 @@ export async function sendMessageToModel(messageContent, onUserMessage, onModelM
     const userBubbleId = generateUserBubbleId();
     messageObject = { id: userBubbleId, content: messageContent };
     onUserMessage({ role: 'user', content: messageContent, timestamp, loading: false, id: userBubbleId });
+    saveHistory('user', messageContent);
     messageHistory.set(userBubbleId, messageObject);  // 将完整的消息对象存入 Map
     console.log("新消息存储到 messageHistory:", userBubbleId, messageContent);
     globalState.retryBubbleId = null;
@@ -108,6 +109,7 @@ export async function sendMessageToModel(messageContent, onUserMessage, onModelM
         loading: false,
         id: modelBubbleId,
       });
+      saveHistory('model', modelResponseContent);
       bindButtonEvents(modelBubbleId, modelResponseContent, onModelMessage, setIsSending, messageObject);
 
       if (!isRetry) {
