@@ -6,7 +6,6 @@ export const saveFavorite = (message) => {
   if (!message || message.trim() === '') {
     return;  // 如果为空，直接返回
   }
-
   // 获取现有收藏夹
   const existingFavorites = getFavorites();
   

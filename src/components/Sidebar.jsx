@@ -125,7 +125,7 @@ const Sidebar = ({selectedText, onClose, onOpenFavorites}) => {
       {isMoreMenuOpen && (
         <div className="more-menu">
           <ul>
-            <li onClick={onOpenFavorites}>收藏夹</li>
+            <li onClick={() => { setIsMoreMenuOpen(false); onOpenFavorites(); }}>收藏夹</li>
             <li onClick={() => { setIsMoreMenuOpen(false); console.log('Settings clicked'); }}>设置</li>
             <li onClick={() => { setIsMoreMenuOpen(false); console.log('History clicked'); }}>历史记录</li>
           </ul>

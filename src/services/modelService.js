@@ -1,5 +1,7 @@
 import fetchSSE from '../utils/fetchSSE';
 import { marked } from 'marked';
+import {saveFavorite} from '../services/favoriteService'
+
 
 const apiKey = process.env.API_KEY;
 let controller;
@@ -185,12 +187,6 @@ function fallbackCopyTextToClipboard(text) {
     alert('复制失败，请手动复制');
   }
   document.body.removeChild(textArea);
-}
-
-function saveFavorite(content) {
-  const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-  favorites.push(content);
-  localStorage.setItem('favorites', JSON.stringify(favorites));
 }
 
 
