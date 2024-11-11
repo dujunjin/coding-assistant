@@ -66,7 +66,7 @@ const FavoritesPage = ({ onBack }) => {
                 >
                   {expandedItemId === item.id 
                     ? <div dangerouslySetInnerHTML={{ __html: marked(item.content || ' ') }} /> // 使用 marked 渲染 Markdown
-                    : (item.content && item.content.length > 50 ? `${item.content.substring(0, 50)}...` : item.content)
+                    : (item.content && item.content.length > 30 ? `${item.content.substring(0, 30)}...` : item.content)
                   }
                 </p>
               </div>
