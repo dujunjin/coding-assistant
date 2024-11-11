@@ -1,5 +1,6 @@
 import fetchSSE from '../utils/fetchSSE';
 import { marked } from 'marked';
+import { saveFavorite } from '../services/favoriteService';
 
 const apiKey = process.env.API_KEY;
 let controller; // 定义控制器
@@ -77,16 +78,6 @@ export async function sendMessageToModel(message, onUserMessage, onModelMessage,
               onModelMessage({ role: 'system', content: '', loading: false, id: loadingBubbleId });
               modelBubbleId = loadingBubbleId;
             }
-
-            // if (isRetry && isFirstUpdate) {
-            //   // 清除“重新回复中…”的内容并显示新内容
-            //   onModelMessage({ role: 'system', content: '', loading: false, id: modelBubbleId });
-            //   isFirstUpdate = false; // 设置标志，确保只清除一次
-            // } else if (!modelBubbleId) {
-            //   // 正常回复的情况下，首次接收数据时替换“模型正在思考中…”气泡
-            //   modelBubbleId = loadingBubbleId; // 使用 loadingBubbleId 作为最终模型气泡 ID
-            //   globalState.currentModelBubbleId = modelBubbleId; // 更新 currentModelBubbleId
-            // }
             
             // 更新气泡内容为当前模型响应
             onModelMessage({
@@ -125,7 +116,7 @@ export async function sendMessageToModel(message, onUserMessage, onModelMessage,
 
   } catch (error) {
     if (error.name === 'AbortError') {
-      onModelMessage({ role: 'system', content: '请求已中断', timestamp: '' });
+      // onModelMessage({ role: 'system', content: '请求已中断', timestamp: '' });
     } else {
       onModelMessage({ role: 'error', content: '错误：无法连接到模型', timestamp });
     }
@@ -217,10 +208,14 @@ function bindButtonEvents(id, content, onModelMessage, setIsSending) {
     });
   }
 
-  // 处理收藏按钮
+  // 收藏按钮的逻辑
   if (favoriteButton) {
+    console.log("begin");
     favoriteButton.addEventListener('click', () => {
-      saveFavorite(content);
+      // 调用保存收藏的函数
+      saveFavorite(content); 
+  
+      // 提示用户已收藏
       alert('已收藏');
     });
   }
@@ -244,11 +239,4 @@ function fallbackCopyTextToClipboard(text) {
     alert('复制失败，请手动复制');
   }
   document.body.removeChild(textArea);
-}
-
-// 收藏功能的辅助函数
-function saveFavorite(content) {
-  const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-  favorites.push(content);
-  localStorage.setItem('favorites', JSON.stringify(favorites));
 }

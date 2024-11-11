@@ -6,7 +6,9 @@
     "activeTab",
     "contextMenus",
     "storage",
-    "scripting"
+    "scripting",
+    "tabs",
+    "webNavigation"
   ],
   "host_permissions": [
     "http://ojo.bnu.edu.cn/*"

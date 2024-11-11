@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { sendMessageToModel, cancelMessage } from '../services/modelService'; // 新增 cancelMessage
 import '../styles/sidebar.css';
 
-const Sidebar = ({ selectedText, onClose }) => {
+const Sidebar = ({selectedText, onClose, onOpenFavorites}) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isSending, setIsSending] = useState(false); // 新增状态变量
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);// 控制更多菜单的显示
-
   useEffect(() => {
     if (selectedText) {
       setInput(selectedText);
@@ -69,6 +68,7 @@ const Sidebar = ({ selectedText, onClose }) => {
       sendMessageToModel(messageContent, addMessage, addMessage, setIsSending); // 传递 setIsSending 以更新状态
     }
   };
+
   return (
     <div id="custom-sidebar" className="sidebar-container">
       <div className="sidebar-title-bar">
@@ -122,11 +122,10 @@ const Sidebar = ({ selectedText, onClose }) => {
           {isSending ? "中断" : "发送"}
         </button>
       </div>
-      {/* 弹窗菜单 */}
       {isMoreMenuOpen && (
         <div className="more-menu">
           <ul>
-            <li onClick={() => { setIsMoreMenuOpen(false); console.log('Favorites clicked'); }}>收藏夹</li>
+            <li onClick={onOpenFavorites}>收藏夹</li>
             <li onClick={() => { setIsMoreMenuOpen(false); console.log('Settings clicked'); }}>设置</li>
             <li onClick={() => { setIsMoreMenuOpen(false); console.log('History clicked'); }}>历史记录</li>
           </ul>
