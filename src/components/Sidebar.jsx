@@ -114,7 +114,7 @@ const Sidebar = ({selectedText, onClose, onOpenFavorites}) => {
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault();
-              handleSend();
+              handleSendClick(); // 调用发送消息的函数
             }
           }}
         />
