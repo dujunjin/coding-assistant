@@ -15,9 +15,11 @@ const globalState = {
 
 const messageHistory = new Map();
 
+let uniqueIdCounter = 0;
 // 生成唯一的消息 ID
 function generateUserBubbleId() {
-  return Date.now();
+  uniqueIdCounter += 1; // 每次生成 ID 时递增
+  return `${Date.now()}-${uniqueIdCounter}`; // 时间戳 + 计数器组合成唯一 ID
 }
 
 export async function sendMessageToModel(messageContent, onUserMessage, onModelMessage, setIsSending, isRetry = false, messageObject = null) {
