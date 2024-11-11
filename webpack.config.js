@@ -4,6 +4,7 @@ const webpack = require('webpack');
 const dotenv = require('dotenv').config({ path: './.env' });
 
 module.exports = {
+  devtool: 'source-map',  // 启用 source map
   // 定义入口文件
   entry: {
     contentScript: './src/content/contentScript.js',  // 内容脚本的入口文件
