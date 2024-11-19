@@ -1,0 +1,112 @@
+/* favoritesPage.css */
+.favorites-page {
+  position: fixed;  /* 确保其固定在视口中 */
+  right: 25%;  /* 使其紧贴 sidebar-container 的左边界 */
+  top: 0;  /* 从页面顶部开始 */
+  width: 25%;  /* 调整宽度为占满屏幕剩余部分 */
+  height: 100%;  /* 使其占满整个页面高度 */
+  max-height: 100%;  /* 确保最大高度不会超过视口 */
+  background-color: #f4f7fc;
+  padding: 20px;
+  border-radius: 8px;  /* 可根据需要调整或去除 */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  overflow-y: auto; /* 允许垂直滚动 */
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  font-size: 24px;
+  color: #333;
+}
+
+.back-button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.back-button:hover {
+  background-color: #45a049;
+}
+
+.loading-text, .error-message {
+  text-align: center;
+  font-size: 18px;
+  color: #555;
+}
+
+.empty-message {
+  text-align: center;
+  font-size: 18px;
+  color: #888;
+}
+
+.favorites-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.favorite-content {
+  font-size: 16px;
+  color: #333;
+  flex: 1;
+  white-space: nowrap; /* 禁止换行 */
+  overflow: hidden;    /* 隐藏超出的文本 */
+  text-overflow: ellipsis; /* 显示省略号 */
+  cursor: pointer; /* 添加指针样式，提示用户点击 */
+}
+
+/* 限制消息内容为单行，超出部分省略号表示 */
+.favorite-content.collapsed {
+  white-space: nowrap;        /* 将内容设置为单行 */
+  overflow: hidden;           /* 隐藏超出的内容 */
+  text-overflow: ellipsis;    /* 添加省略号 */
+}
+
+/* 展开的消息内容 */
+.favorite-content.expanded {
+  white-space: normal;        /* 内容允许换行 */
+}
+
+.favorite-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s;
+}
+
+.favorite-item:hover {
+  background-color: #f9f9f9; /* 添加悬停效果 */
+}
+
+.delete-button {
+  background-color: #e53e3e;
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background-color: #c53030;
+}
+
+button:focus {
+  outline: none;
+}
