@@ -1,16 +1,31 @@
-
-
-export const showIcon = (x, y, onClick) => {
-
-  // 如果已有图标存在，先移除
+export const showIcon = (x, y, onClick, onOpenFavorites) => {
   const existingIcon = document.getElementById('custom-selected-icon');
   if (existingIcon) {
     existingIcon.remove();
   }
 
-  // 创建图标
+  // 创建图标与快捷功能栏的主容器
+  const container = document.createElement('div');
+  container.id = 'custom-selected-icon';
+  container.style.position = 'absolute';
+  container.style.width = '45px'; // 初始宽度
+  container.style.height = '45px';
+  container.style.top = `${y}px`;
+  container.style.left = `${x}px`;
+  container.style.zIndex = 1000;
+  container.style.display = 'flex';
+  container.style.alignItems = 'center';
+  container.style.justifyContent = 'flex-start'; // 图标与功能键横向排列
+  container.style.cursor = 'pointer';
+  container.style.borderRadius = '12px';
+  container.style.transition = 'width 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease';
+
+  // 初始背景隐藏
+  container.style.backgroundColor = 'transparent';
+  container.style.boxShadow = 'none';
+
+  // 图标本体
   const icon = document.createElement('div');
-  icon.id = 'custom-selected-icon';
   icon.innerHTML = `
     <svg width="45" height="45" viewBox="0 0 45 45" fill="none" xmlns="http://www.w3.org/2000/svg">
       <g filter="url(#filter0_d_414_83)">
@@ -37,34 +52,114 @@ export const showIcon = (x, y, onClick) => {
       </linearGradient>
       </defs>
     </svg>`;
-
-  // 设置图标样式
-  icon.style.position = 'absolute';
-  icon.style.top = `${y}px`;
-  icon.style.left = `${x}px`;
-  icon.style.cursor = 'pointer';
-  icon.style.zIndex = 1000;
-  icon.style.width = '100px';
-  icon.style.height = '100px';
-  icon.style.borderRadius = '50%';
+  icon.style.width = '45px';
+  icon.style.height = '45px';
   icon.style.display = 'flex';
   icon.style.alignItems = 'center';
   icon.style.justifyContent = 'center';
-  icon.style.pointerEvents = 'auto';
 
-   // 绑定点击事件并确认绑定成功
-   icon.addEventListener('click',() => {
-    console.log("Icon clicked");
-    console.log("onclick is:", onClick); // 查看 onclick 是否存在
-    onClick();
-    document.body.removeChild(icon);  // 移除图标  
+  // 为图标添加点击事件监听器
+  icon.addEventListener('click', () => {
+    container.style.display = 'none';
   });
 
-  document.body.appendChild(icon);
-  console.log('Icon added to document.');
+  // 快捷功能栏内容
+  const actions = [
+    {
+      icon: '⭐',
+      label: '收藏夹',
+      onClick: () => {
+        if (onOpenFavorites) {
+          onOpenFavorites();
+        } else {
+          console.error('onOpenFavorites 方法未定义');
+        }
+      },
+    },
+    { icon: '🔍', label: 'AI搜索' },
+    { icon: '⚙️', label: '功能选择' },
+    { icon: '📖', label: '界面解释' },
+  ];
+
+  // 快捷功能按钮容器
+  const actionsContainer = document.createElement('div');
+  actionsContainer.style.display = 'none'; // 初始隐藏
+  actionsContainer.style.flexDirection = 'row';
+  actionsContainer.style.alignItems = 'center';
+  actionsContainer.style.marginLeft = '10px';
+
+  actions.forEach((action) => {
+    const actionButton = document.createElement('button');
+    actionButton.innerHTML = action.icon;
+    actionButton.title = action.label;
+    actionButton.style.border = 'none';
+    actionButton.style.background = 'none';
+    actionButton.style.cursor = 'pointer';
+    actionButton.style.padding = '10px';
+    actionButton.style.display = 'flex';
+    actionButton.style.alignItems = 'center';
+    actionButton.style.justifyContent = 'center';
+    actionButton.style.transition = 'background-color 0.3s ease';
+    actionButton.addEventListener('click', action.onClick);
+    actionButton.addEventListener('mouseenter', () => {
+      actionButton.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
+    });
+    actionButton.addEventListener('mouseleave', () => {
+      actionButton.style.backgroundColor = 'transparent';
+    });
+    actionsContainer.appendChild(actionButton);
+  });
+
+  container.appendChild(icon);
+  container.appendChild(actionsContainer);
+  document.body.appendChild(container);
+
+  // 鼠标悬停事件
+  container.addEventListener('mouseenter', () => {
+    container.style.backgroundColor = '#fff'; // 背景显示
+    container.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)'; // 恢复阴影
+    container.style.width = 'auto'; // 背景动态延伸
+    actionsContainer.style.display = 'flex';
+  });
+
+  container.addEventListener('mouseleave', () => {
+    container.style.backgroundColor = 'transparent'; // 背景隐藏
+    container.style.boxShadow = 'none'; // 移除阴影
+    container.style.width = '45px'; // 恢复初始大小
+    actionsContainer.style.display = 'none';
+  });
+
+  // 图标点击事件
+  icon.addEventListener('click', () => {
+    console.log('Icon clicked');
+    onClick();
+  });
+
+  // 添加拖动功能
+  let isDragging = false;
+  let offsetX = 0;
+  let offsetY = 0;
+
+  container.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    offsetX = e.clientX - container.getBoundingClientRect().left;
+    offsetY = e.clientY - container.getBoundingClientRect().top;
+    container.style.cursor = 'grabbing';
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (isDragging) {
+      container.style.left = `${e.clientX - offsetX}px`;
+      container.style.top = `${e.clientY - offsetY}px`;
+    }
+  });
+
+  document.addEventListener('mouseup', () => {
+    isDragging = false;
+    container.style.cursor = 'pointer';
+  });
 };
 
-// 移除图标的函数
 export const removeIcon = () => {
   const icon = document.getElementById('custom-selected-icon');
   if (icon) {
