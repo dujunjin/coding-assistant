@@ -8,7 +8,8 @@
     "storage",
     "scripting",
     "tabs",
-    "webNavigation"
+    "webNavigation",
+    "sidePanel"
   ],
   "host_permissions": [
     "http://ojo.bnu.edu.cn/*"
@@ -33,6 +34,9 @@
       "run_at": "document_end"
     }
   ],
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",

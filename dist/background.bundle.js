@@ -1,2 +1,2 @@
-chrome.action.onClicked.addListener((function(e){chrome.tabs.sendMessage(e.id,{action:"toggleSidebar"})}));
+chrome.runtime.onInstalled.addListener((function(){chrome.sidePanel.setPanelBehavior({openPanelOnActionClick:!0})})),chrome.action.onClicked.addListener((function(e){chrome.tabs.sendMessage(e.id,{action:"toggleSidebar"}),chrome.sidePanel.open({windowId:e.windowId}).catch((function(e){console.error("Error opening side panel:",e)}))})),chrome.tabs.onUpdated.addListener((function(e,n,o){o.url&&o.url.startsWith("http://ojo.bnu.edu.cn")?chrome.sidePanel.setOptions({tabId:e,path:"sidepanel.html",enabled:!0}):chrome.sidePanel.setOptions({tabId:e,enabled:!1})}));
 //# sourceMappingURL=background.bundle.js.map

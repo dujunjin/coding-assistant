@@ -9,6 +9,7 @@ module.exports = {
   entry: {
     contentScript: './src/content/contentScript.js',  // 内容脚本的入口文件
     background: './src/background/background.js',  // 后台服务脚本入口文件
+    sidepanel: './src/sidepanel/sidepanel.jsx',  // 侧边栏React组件的入口文件
   },
   // 输出打包文件
   output: {
@@ -54,6 +55,7 @@ module.exports = {
       patterns: [
         { from: 'public/icons', to: 'icons' },  // 复制icons文件夹到dist/icons
         { from: 'public/manifest.json', to: 'manifest.json' },  // 复制manifest.json到dist目录
+        { from: 'src/sidepanel/sidepanel.html', to: 'sidepanel.html' },  // 添加侧边栏HTML文件
       ],
     }),
     // 注入环境变量
