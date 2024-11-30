@@ -57,6 +57,9 @@ export async function sendMessageToModel(messageContent, onUserMessage, onModelM
 
   try {
     setIsSending(true);
+    chrome.storage.local.get(['key'], function(result) {
+      console.log('Data from local storage:', result.key);
+    });
     await fetchSSE('https://api.deepseek.com/chat/completions', {
       method: 'POST',
       headers: {

@@ -35,7 +35,22 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === 'complete' && tab.url) {
     chrome.cookies.getAll({ url: tab.url }, (cookies) => {
-      console.log('Cookies for current page:', cookies);
+      let username = null;
+      for (const cookie of cookies) {  // Use for...of loop to iterate over the array
+        if (cookie.name === 'HUSTOJ_user') {  // Correct way to access the 'name' property
+          username = cookie.value;  // Correct way to access the 'value' property
+        }
+      }
+
+      // If a username was found, store it
+      if (username) {
+        chrome.storage.local.set({ key: username }, function() {
+          console.log('Data saved to local storage: ' + username);
+        });
+      } else {
+        console.log('Username cookie not found.');
+      }
     });
   }
 });
+
