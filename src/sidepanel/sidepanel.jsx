@@ -6,4 +6,9 @@ const SidePanel = () => {
   return <Sidebar />;
 };
 
-ReactDOM.render(<SidePanel />, document.getElementById('root'));
+import {createRoot} from "react-dom/client";
+const container = document.getElementById('root');
+const root =createRoot(container);
+root.render(<SidePanel />)
+
+// ReactDOM.render(<SidePanel />, document.getElementById('root'));

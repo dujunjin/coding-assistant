@@ -30,3 +30,12 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     });
   }
 });
+
+// 获取页面Cookies
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (changeInfo.status === 'complete' && tab.url) {
+    chrome.cookies.getAll({ url: tab.url }, (cookies) => {
+      console.log('Cookies for current page:', cookies);
+    });
+  }
+});

@@ -114,6 +114,8 @@ const App = () => {
 
 const mountNode = document.createElement('div');
 document.body.appendChild(mountNode);
-ReactDOM.render(<App />, mountNode);
+const root = ReactDOM.createRoot(mountNode);
+root.render(<App />);
+
 
 
