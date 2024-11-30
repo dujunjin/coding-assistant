@@ -1,6 +1,6 @@
 import fetchSSE from '../utils/fetchSSE';
 import { marked } from 'marked';
-import {saveFavorite} from '../services/favoriteService'
+import {saveFavorite} from './favoriteService'
 import { saveHistory } from './historyService';
 
 const apiKey = process.env.API_KEY;
@@ -20,6 +20,25 @@ let uniqueIdCounter = 0;
 function generateUserBubbleId() {
   uniqueIdCounter += 1; // 每次生成 ID 时递增
   return `${Date.now()}-${uniqueIdCounter}`; // 时间戳 + 计数器组合成唯一 ID
+}
+
+function generateUUID() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
+function getStorageSync(key) {
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.get([key], function(result) {
+      if (result[key]) {
+        resolve(result[key]);
+      } else {
+        reject(new Error(`Key ${key} not found`));
+      }
+    });
+  });
 }
 
 export async function sendMessageToModel(messageContent, onUserMessage, onModelMessage, setIsSending, isRetry = false, messageObject = null) {
@@ -57,47 +76,50 @@ export async function sendMessageToModel(messageContent, onUserMessage, onModelM
 
   try {
     setIsSending(true);
-    chrome.storage.local.get(['key'], function(result) {
-      console.log('Data from local storage:', result.key);
-    });
-    await fetchSSE('https://api.deepseek.com/chat/completions', {
+
+    await fetchSSE('http://192.168.207.4/v1/chat-messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
+        'Authorization': `Bearer app-ii8Y5h0VQVxyT6vIEeF0NDdL`
       },
       body: JSON.stringify({
-        model: "deepseek-chat",
-        messages: [
-          { role: "system", content: "You are a helpful assistant." },
-          { role: "user", content: messageObject.content },
-        ],
-        stream: true,
+        // model: "deepseek-chat",
+        // messages: [
+        //   { role: "system", content: "You are a helpful assistant." },
+        //   { role: "user", content: messageObject.content },
+        // ],
+        // stream: true,
+        inputs: {},
+        query: messageObject.content,
+        response_mode: "streaming",
+        // conversation_id: generateUUID(),
+        user: await getStorageSync('key'),
       }),
       signal,
       onMessage: (data) => {
         try {
           const parsedData = JSON.parse(data);
-          if (parsedData.choices && parsedData.choices[0] && parsedData.choices[0].delta) {
-            const content = parsedData.choices[0].delta.content || "";
-            modelResponseContent += content;
+          // if (parsedData.choices && parsedData.choices[0] && parsedData.choices[0].delta) {
+          const content = parsedData.answer || "";
+          modelResponseContent += content;
 
-            if (isRetry && isFirstUpdate) {
-              onModelMessage({ role: 'system', content: '', loading: false, id: modelBubbleId });
-              isFirstUpdate = false;
-            } else if (!modelBubbleId) {
-              onModelMessage({ role: 'system', content: '', loading: false, id: loadingBubbleId });
-              modelBubbleId = loadingBubbleId;
-            }
-
-            onModelMessage({
-              role: 'model',
-              content: marked.parse(modelResponseContent),
-              timestamp: timestamp,
-              loading: true,
-              id: modelBubbleId,
-            });
+          if (isRetry && isFirstUpdate) {
+            onModelMessage({ role: 'system', content: '', loading: false, id: modelBubbleId });
+            isFirstUpdate = false;
+          } else if (!modelBubbleId) {
+            onModelMessage({ role: 'system', content: '', loading: false, id: loadingBubbleId });
+            modelBubbleId = loadingBubbleId;
           }
+
+          onModelMessage({
+            role: 'model',
+            content: marked.parse(modelResponseContent),
+            timestamp: timestamp,
+            loading: true,
+            id: modelBubbleId,
+          });
+          // }
         } catch (err) {
           console.error("解析数据时出错：", err);
         }
