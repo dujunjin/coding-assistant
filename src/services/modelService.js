@@ -77,11 +77,11 @@ export async function sendMessageToModel(messageContent, onUserMessage, onModelM
   try {
     setIsSending(true);
 
-    await fetchSSE('http://192.168.207.4/v1/chat-messages', {
+    await fetchSSE('http://dify.domain.com/v1/chat-messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer app-ii8Y5h0VQVxyT6vIEeF0NDdL`
+        'Authorization': `Bearer app-8fXyKoEq2Ka1XI3ZSs1FftaG`
       },
       body: JSON.stringify({
         // model: "deepseek-chat",
@@ -90,7 +90,9 @@ export async function sendMessageToModel(messageContent, onUserMessage, onModelM
         //   { role: "user", content: messageObject.content },
         // ],
         // stream: true,
-        inputs: {},
+        inputs: {
+          'code': "def walkDirFile(srcPath, ext=\".tif\"):\n    \"\"\"\n    遍历文件夹\n    :param srcPath:\n    :param ext:\n    :return:\n    \"\"\"\n    if not os.path.exists(srcPath):\n        print(\"not find path:{0}\".format(srcPath))\n        return None\n    if os.path.isfile(srcPath):\n        return None\n\n    if os.path.isdir(srcPath):\n        fileList = []\n        for root, dirs, files in os.walk(srcPath):\n            for name in files:\n                filePath = os.path.join(root, name)\n                if ext:\n                    if ext == os.path.splitext(name)[1]:\n                        fileList.append(filePath)\n                else:\n                    fileList.append(filePath)\n        fileList.sort()\n        return fileList\n    else:\n        return None"
+        },
         query: messageObject.content,
         response_mode: "streaming",
         // conversation_id: generateUUID(),
