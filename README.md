@@ -7,4 +7,4 @@ This project is a Chrome extension built using React. It provides a popup interf
 1. Clone this repository.
 2. Run `npm install` to install the dependencies.
 3. Run `npm run build` to build the project.
-4. Load the `my-react-extension` folder as an unpacked extension in Chrome.
+4. Load the `dist` folder as an unpacked extension in Chrome.
