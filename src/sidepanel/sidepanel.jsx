@@ -1,10 +1,40 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import Sidebar from '../components/Sidebar';  // 导入你之前创建的Sidebar组件
+// SidePanel.js
+import React, { useState, useEffect } from 'react';
+import Sidebar from '../components/Sidebar';
+// import { chrome } from 'browser';
 
 const SidePanel = () => {
-  return <Sidebar />;
+  const [codeText, setCodeText] = useState('');
+
+  useEffect(() => {
+    // 读取初始值
+    chrome.storage.local.get(['codeText'], (result) => {
+      if (result.codeText) {
+        setCodeText(result.codeText);
+      }
+    });
+
+    // 监听存储变化
+    chrome.storage.onChanged.addListener((changes, areaName) => {
+      if (changes.codeText) {
+        setCodeText(changes.codeText.newValue);
+      }
+    });
+
+    // 清理监听器
+    return () => {
+      chrome.storage.onChanged.removeListener((changes, areaName) => {
+        if (changes.codeText) {
+          setCodeText(changes.codeText.newValue);
+        }
+      });
+    };
+  }, []);
+
+  return <Sidebar codeText={codeText} />;
 };
+
+export default SidePanel;
 
 import {createRoot} from "react-dom/client";
 const container = document.getElementById('root');

@@ -13,6 +13,17 @@ const globalState = {
   latestMessageId: null,  // 用于追踪最新消息的 ID
 };
 
+let globalText = '';  // 用于存储文本
+
+// 设置全局文本的函数
+export const setGlobalText = (text) => {
+  globalText = text;
+  console.log('Global text set:', globalText);  // 打印设置的文本，确认是否成功
+};
+
+// 获取全局文本的函数
+export const getGlobalText = () => globalText;
+
 const messageHistory = new Map();
 
 let uniqueIdCounter = 0;
@@ -41,10 +52,11 @@ function getStorageSync(key) {
   });
 }
 
-export async function sendMessageToModel(messageContent, onUserMessage, onModelMessage, setIsSending, isRetry = false, messageObject = null) {
+export async function sendMessageToModel(messageContent, onUserMessage, onModelMessage, setIsSending, codetext='',isRetry = false, messageObject = null) {
   controller = new AbortController();
   const { signal } = controller;
   const timestamp = new Date().toLocaleTimeString();
+  console.log(getGlobalText());
 
   // 如果是新消息而不是重试，创建并存储消息对象
   if (!isRetry) {
@@ -53,11 +65,11 @@ export async function sendMessageToModel(messageContent, onUserMessage, onModelM
     onUserMessage({ role: 'user', content: messageContent, timestamp, loading: false, id: userBubbleId });
     saveHistory('user', messageContent);
     messageHistory.set(userBubbleId, messageObject);  // 将完整的消息对象存入 Map
-    console.log("新消息存储到 messageHistory:", userBubbleId, messageContent);
+    // console.log("新消息存储到 messageHistory:", userBubbleId, messageContent);
     globalState.retryBubbleId = null;
     globalState.latestMessageId = userBubbleId; // 更新最新消息 ID
   } else if (messageObject) {
-    console.log("重试消息使用的 userBubbleId:", messageObject.id);
+    // console.log("重试消息使用的 userBubbleId:", messageObject.id);
   }
 
   let modelBubbleId = null;
@@ -84,25 +96,18 @@ export async function sendMessageToModel(messageContent, onUserMessage, onModelM
         'Authorization': `Bearer app-8fXyKoEq2Ka1XI3ZSs1FftaG`
       },
       body: JSON.stringify({
-        // model: "deepseek-chat",
-        // messages: [
-        //   { role: "system", content: "You are a helpful assistant." },
-        //   { role: "user", content: messageObject.content },
-        // ],
-        // stream: true,
-        inputs: {
-          'code': "def walkDirFile(srcPath, ext=\".tif\"):\n    \"\"\"\n    遍历文件夹\n    :param srcPath:\n    :param ext:\n    :return:\n    \"\"\"\n    if not os.path.exists(srcPath):\n        print(\"not find path:{0}\".format(srcPath))\n        return None\n    if os.path.isfile(srcPath):\n        return None\n\n    if os.path.isdir(srcPath):\n        fileList = []\n        for root, dirs, files in os.walk(srcPath):\n            for name in files:\n                filePath = os.path.join(root, name)\n                if ext:\n                    if ext == os.path.splitext(name)[1]:\n                        fileList.append(filePath)\n                else:\n                    fileList.append(filePath)\n        fileList.sort()\n        return fileList\n    else:\n        return None"
+        inputs: 
+        {
+          'code': codetext,
         },
         query: messageObject.content,
         response_mode: "streaming",
-        // conversation_id: generateUUID(),
         user: await getStorageSync('key'),
       }),
       signal,
       onMessage: (data) => {
         try {
           const parsedData = JSON.parse(data);
-          // if (parsedData.choices && parsedData.choices[0] && parsedData.choices[0].delta) {
           const content = parsedData.answer || "";
           modelResponseContent += content;
 
@@ -116,7 +121,7 @@ export async function sendMessageToModel(messageContent, onUserMessage, onModelM
 
           onModelMessage({
             role: 'model',
-            content: marked.parse(modelResponseContent),
+            content: marked.parse(modelResponseContent.trim()),
             timestamp: timestamp,
             loading: true,
             id: modelBubbleId,
@@ -180,12 +185,12 @@ function bindButtonEvents(id, content, onModelMessage, setIsSending, messageObje
         return;
       }
 
-      console.log("重试按钮点击，查找对应的用户输入内容，ID:", messageObject.id);
+      // console.log("重试按钮点击，查找对应的用户输入内容，ID:", messageObject.id);
       const originalMessageData = messageHistory.get(messageObject.id);
-      console.log("重试按钮 - messageHistory:", Array.from(messageHistory.entries()));
+      // console.log("重试按钮 - messageHistory:", Array.from(messageHistory.entries()));
 
       if (originalMessageData) {
-        console.log("找到对应的原始用户输入:", originalMessageData.content);
+        // console.log("找到对应的原始用户输入:", originalMessageData.content);
         setIsSending(true);
         sendMessageToModel(originalMessageData.content, null, onModelMessage, setIsSending, true, originalMessageData);
       } else {
@@ -219,8 +224,6 @@ function fallbackCopyTextToClipboard(text) {
   }
   document.body.removeChild(textArea);
 }
-
-
 
 // 生成按钮 HTML 的辅助函数
 function generateButtonHTML(id) {

@@ -1,8 +1,10 @@
-export const showIcon = (x, y, onClick, onOpenFavorites) => {
+export const showIcon = (x, y, text) => {
   const existingIcon = document.getElementById('custom-selected-icon');
   if (existingIcon) {
     existingIcon.remove();
   }
+
+  console.log("text111: ", text);
 
   // 创建图标与快捷功能栏的主容器
   const container = document.createElement('div');
@@ -131,9 +133,9 @@ export const showIcon = (x, y, onClick, onOpenFavorites) => {
 
   // 图标点击事件
   icon.addEventListener('click', () => {
-    console.log('Icon clicked');
-    onClick();
+    chrome.runtime.sendMessage({ action: 'openSidePanel' });
   });
+  
 
   // 添加拖动功能
   let isDragging = false;

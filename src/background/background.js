@@ -1,3 +1,7 @@
+// 在 background.js 中导入 setGlobalText
+import { setGlobalText } from '../services/modelService';
+console.log(setGlobalText);  
+
 chrome.runtime.onInstalled.addListener(() => {
   // 设置侧边栏行为为点击扩展图标时打开侧边栏
   chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
@@ -11,6 +15,20 @@ chrome.action.onClicked.addListener((tab) => {
   chrome.sidePanel.open({ windowId: tab.windowId }).catch((err) => {
     console.error('Error opening side panel:', err);
   });
+});
+
+// background.js
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === 'openSidePanel') {
+    // 获取当前活动标签页的 windowId
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const tab = tabs[0];
+      chrome.sidePanel.open({ windowId: tab.windowId })
+        .catch((err) => {
+          console.error('Error opening side panel:', err);
+        });
+    });
+  }
 });
 
 // 根据特定条件在特定网站启用侧边栏
@@ -53,4 +71,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     });
   }
 });
+
+
 

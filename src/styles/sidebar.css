@@ -4,60 +4,15 @@
   position: fixed;
   top: 0;
   right: 0;
-  width: 95%;
+  width: 100%;
   height: 100%;
   z-index: 10000;
   display: flex;
   flex-direction: column;
-  background-color: #f5f7fa;
+  background-color: #ffffff;
   box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
-  padding: 10px;
   transition: background-color 0.3s, color 0.3s;
-}
-
-/* 上边栏样式 */
-.sidebar-title-bar {
-  background-color: #007bff;
-  color: white;
-  padding: 10px 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-radius: 10px 10px 0 0;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  font-size: 1.5em;  /* 增大字体 */
-  position: relative;
-}
-
-/* 图标容器样式 */
-.icon-container {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px; /* 缩小图标之间的间距 */
-  margin-left: auto; /* 将图标整体向右移动 */
-}
-
-/* 固定标识的样式 */
-.pin-icon, .close-icon, .more-icon {
-  cursor: pointer;
-  background-color: transparent;
-  border: none;
-  color: white;
-  font-size: 1.5em;
-  display: flex;
-  align-items: center;
-}
-
-/* 图标hover效果 */
-.pin-icon:hover, .close-icon:hover, .more-icon:hover {
-  opacity: 0.8;
-}
-
-/* 标题左侧图标 */
-.title-icon {
-  margin-right: 8px; /* 调整图标和文字的间距 */
 }
 
 /* 下拉菜单样式 */
@@ -155,8 +110,8 @@
 }
 
 .model-bubble {
-  background-color: #f1f1f1;
-  color: #333;
+  background-color: #ffffff;
+  color: #000000;
   align-self: flex-start;
   text-align: left;
   margin-right: auto;
@@ -167,17 +122,67 @@
   padding: 20px 15px 50px 15px;
   border-radius: 10px;
   position: relative;
-  overflow: visible;  /* 确保内容不被裁剪 */
+  overflow: visible; /* 确保内容不被裁剪 */
 }
+
+.model-bubble a {
+  color: #007bff; /* 设置链接的颜色 */
+  text-decoration: none;
+}
+
+.model-bubble a:hover {
+  text-decoration: underline; /* 鼠标悬停时下划线 */
+}
+
+/* 渲染的代码块样式 */
+.model-bubble pre {
+  background-color: #f5f5f5; /* 代码块背景色 */
+  color: #333; /* 文字颜色 */
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 5px;
+  font-family: 'Courier New', Courier, monospace; /* 固定宽度字体 */
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-x: auto; /* 支持横向滚动 */
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1); /* 内部阴影 */
+}
+
+/* 高亮代码行 */
+.model-bubble code {
+  /* background-color: #f8f8f8;  */
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-size: 90%;
+  color: #df7a3c; /* 高亮文本颜色 */
+}
+
+.model-bubble blockquote {
+  border-left: 5px solid #3f3f3f;
+  padding-left: 15px;
+  margin: 10px 0;
+  font-style: italic;
+}
+
+.model-bubble ul, .model-bubble ol {
+  padding-left: 20px;
+}
+
+.model-bubble img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
 
 /* 输入框区域 */
 .chat-input-container {
   display: flex;
+  width: 95%;
   padding: 10px;
-  background-color: #f1f1f1;
+  background-color: #ffffff;
   border-top: 1px solid #ddd;
   transition: background-color 0.3s;
-  border-radius: 10px;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
 }
 
@@ -188,7 +193,7 @@
   border: 1px solid #ccc;
   transition: background-color 0.3s, color 0.3s;
   font-size: 1em;
-  resize: none;  /* 禁止 textarea 的手动调整大小 */
+  resize: none;   /* 禁止 textarea 的手动调整大小 */
 }
 
 .send-button {
@@ -208,12 +213,19 @@
 }
 
 /* 时间戳样式 */
-.timestamp {
+.model-bubble .timestamp {
   font-size: 0.75em;
-  color: #888;
+  color: #333;
   position: absolute;
-  /* margin-top: -50px; */
-  bottom: 0.5px;  /*固定在气泡的底部*/
+  bottom: 1px;  /*固定在气泡的底部*/
+  right: 5px;  /* 靠右对齐 */
+}
+
+.user-bubble .timestamp {
+  font-size: 0.75em;
+  color: #ffffff;
+  position: absolute;
+  bottom: 2px;  /*固定在气泡的底部*/
   right: 5px;  /* 靠右对齐 */
 }
 
@@ -320,22 +332,6 @@
   margin-top: 5px;
   text-align: right;
   display: block;
-}
-
-.close-button {
-  background: none;
-  border: none;
-  font-size: 1.5em;
-  cursor: pointer;
-  color: #333;
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  transition: color 0.3s;
-}
-
-.close-button:hover {
-  color: #ff5c5c;
 }
 
 .history-modal::-webkit-scrollbar {
