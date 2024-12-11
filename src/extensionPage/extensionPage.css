@@ -1,0 +1,267 @@
+/* Reset default margin/padding for all elements */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Set the body background color and text color */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  padding: 20px;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-size: 2rem;
+  /* 调整标题文字大小 */
+  color: black;
+  /* 设置标题字体颜色为黑色 */
+}
+
+p {
+  font-size: 1rem;
+  /* 调整段落文字大小 */
+  margin-top: 10px;
+  color: #666;
+}
+
+/* Main section layout */
+main {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  width: 60%;
+  /* 按钮只占界面的五分之三 */
+  margin: 0 auto;
+  /* 居中对齐 */
+}
+
+/* Style each feature box */
+.feature {
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  /* 调整内边距 */
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.feature:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+.feature h2 {
+  font-size: 1.5rem;
+  /* 调整标题文字大小 */
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.feature p {
+  font-size: 0.9rem;
+  /* 调整段落文字大小 */
+  color: #555;
+  margin-bottom: 15px;
+}
+
+button {
+  background-color: white;
+  /* 按钮颜色为白色 */
+  color: black;
+  /* 文字为黑色 */
+  padding: 4px 8px;
+  /* 调整按钮内边距 */
+  border: 2px solid black;
+  /* 添加边框 */
+  border-radius: 20px;
+  /* 调整圆角半径 */
+  cursor: pointer;
+  font-size: 0.7rem;
+  /* 调整按钮文字大小 */
+  transition: background-color 0.3s, color 0.3s;
+}
+
+button:hover {
+  background-color: #f0f0f0;
+  /* 悬停时按钮颜色 */
+  color: black;
+}
+
+/* New conversation button styling */
+#new-conversation-btn {
+  position: absolute;
+  top: 20px;
+  left: 80px;
+  /* 调整位置以适应新按钮 */
+  background-color: transparent;
+  color: black;
+  padding: 4px 8px;
+  border: 2px solid black;
+  border-radius: 20px;
+  /* 调整圆角半径 */
+  cursor: pointer;
+  font-size: 0.7rem;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+#new-conversation-btn:hover {
+  background-color: black;
+  color: white;
+}
+
+/* Sidebar button styling */
+#sidebar-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: transparent;
+  color: black;
+  padding: 4px 8px;
+  border: 2px solid black;
+  border-radius: 20px;
+  /* 调整圆角半径 */
+  cursor: pointer;
+  font-size: 0.7rem;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+#sidebar-btn:hover {
+  background-color: black;
+  color: white;
+}
+
+#sidebar {
+  position: fixed;
+  /* 让侧边栏固定在页面左侧 */
+  top: 10%;
+  /* 距顶部适当位置 */
+  left: 0;
+  width: 20%;
+  /* 宽度为页面宽度的20% */
+  max-width: 300px;
+  /* 最大宽度限制 */
+  height: 61.8vh;
+  /* 使用黄金分割比例的高度 */
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  font-size: 1rem;
+  /* 设置字体大小 */
+  display: none;
+  /* 默认隐藏 */
+  overflow-y: auto;
+  /* 如果内容超过高度，启用滚动条 */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  /* 添加阴影 */
+}
+
+#background-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  /* 确保背景动画在侧边栏后面 */
+  pointer-events: none;
+  /* 确保背景不会捕获鼠标事件 */
+}
+
+#hover-zone {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 20px;
+  /* 触发区域的宽度 */
+  height: 100%;
+  z-index: 10;
+  /* 确保它位于最顶层 */
+  background-color: transparent;
+  /* 保持透明 */
+  cursor: pointer;
+}
+
+#sidebar button {
+  display: flex;
+  /* 使用 flex 布局 */
+  align-items: center;
+  /* 图标与文字垂直居中 */
+  justify-content: flex-start;
+  /* 图标和文字左对齐 */
+  width: 100%;
+  font-size: 1rem;
+  /* 设置字体大小 */
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#sidebar button:hover {
+  background-color: #e6f7ff;
+  /* 悬停背景色 */
+  color: #0078d7;
+  /* 悬停文字颜色 */
+  box-shadow: 0 0 8px rgba(0, 120, 215, 0.5);
+  /* 悬停阴影效果 */
+  border: 1px solid #0078d7;
+  /* 悬停边框高亮 */
+}
+
+#sidebar button .icon {
+  width: 20px;
+  /* 图标宽度 */
+  height: 20px;
+  /* 图标高度 */
+  margin-right: 10px;
+  /* 图标与文字的间距 */
+}
+
+/* Footer styling */
+footer {
+  text-align: center;
+  margin-top: 40px;
+  color: #777;
+  font-size: 0.9rem;
+}
+
+footer a {
+  color: black;
+  /* 将链接颜色更改为黑色 */
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Design: Make the grid layout stack on small screens */
+@media (max-width: 768px) {
+  main {
+    grid-template-columns: 1fr;
+    width: 100%;
+    /* 在小屏幕上占满宽度 */
+  }
+}
+
+@media (max-width: 768px) {
+  #sidebar {
+    width: 80%;
+    /* 小屏幕上调整为更宽的侧边栏 */
+    max-width: none;
+  }
+}

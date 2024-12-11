@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Extension Page with Bubble Background</title>
+  <link rel="stylesheet" href="extensionPage.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+  <div id="hover-zone"></div>
+
+  <button id="sidebar-btn">Menu</button>
+  <button id="new-conversation-btn">New</button>
+  <div id="sidebar">
+    <button>
+      <i class="fas fa-comments icon"></i> 论坛
+    </button>
+    <button>
+      <i class="fas fa-history icon"></i> 历史记录
+    </button>
+    <button>
+      <i class="fas fa-bookmark icon"></i> 书签
+    </button>
+    <button>
+      <i class="fas fa-code icon"></i> 代码助手
+    </button>
+  </div>
+  <header>
+    <h1>Welcome to the Extension!</h1>
+    <p>Are you ready to explore more?</p>
+  </header>
+  <main>
+    <section class="feature" id="forum">
+      <h2>Student Forum</h2>
+      <p>Share learning experiences and discuss problems.</p>
+      <button id="forum-btn">Go to Forum</button>
+    </section>
+    <section class="feature" id="history">
+      <h2>History</h2>
+      <p>View browsing history and navigate to visited pages.</p>
+      <button id="history-btn">View History</button>
+    </section>
+    <section class="feature" id="bookmarks">
+      <h2>Bookmarks</h2>
+      <p>Save frequently visited websites for quick access.</p>
+      <button id="bookmarks-btn">View Bookmarks</button>
+    </section>
+    <section class="feature" id="code-helper">
+      <h2>Code Helper</h2>
+      <p>Access coding assistant for programming help.</p>
+      <button id="code-helper-btn">Use Code Helper</button>
+    </section>
+  </main>
+  <canvas id="background-canvas"></canvas>
+  <script src="extensionPage.js"></script>
+</body>
+
+</html>
